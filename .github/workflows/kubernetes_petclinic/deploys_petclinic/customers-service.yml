@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customers-service
+  namespace: spring-petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customers-service
+  template:
+    metadata:
+      labels:
+        app: customers-service
+    spec:
+      containers:
+        - name: customers-service
+          image: public.ecr.aws/y6x2k4a9/spring-petclinic-customers-service:latest
+          ports:
+            - containerPort: 8080
+---
+#Le service ClusterIP est le type par défaut au sein de Kubernetes
+#Il reçoit une adresse IP interne au cluster, ce qui rend ses Pods uniquement accessibles depuis le cluster
+#Ce service doit juste est accessible par l'API
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: customers-service
+  name: customers-service
+  namespace: spring-petclinic
+spec:
+  type: ClusterIP
+  ports:
+  - name: "http"
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: customers-service
