@@ -21,7 +21,7 @@ spec:
 ---
 #Le service ClusterIP est le type par défaut au sein de Kubernetes
 #Il reçoit une adresse IP interne au cluster, ce qui rend ses Pods uniquement accessibles depuis le cluster
-#Ce service doit juste est accessible par l'API
+#Ce service doit juste etre accessible par l'API
 apiVersion: v1
 kind: Service
 metadata:
