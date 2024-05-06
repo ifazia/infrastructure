@@ -7,6 +7,7 @@ spec:
     metadata:
       labels:
         app: api-gateway
+        namespace: spring-petclinic
     spec:
       containers:
         - name: api-gateway
@@ -20,6 +21,7 @@ metadata:
   name: api-gateway
   labels:
     app: api-gateway
+  namespace: spring-petclinic
 spec:
   ports:
   - port: 8080
