@@ -28,7 +28,7 @@ metadata:
   labels:
     app: config-server
   name: config-service
-  namespace: spring-petclinic 
+  namespace: spring-petclinic
 spec:
   type: ClusterIP
   ports:
