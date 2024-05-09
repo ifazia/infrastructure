@@ -13,7 +13,7 @@ spec:
       labels:
         app: discovery-server
     spec:
-      Containers:
+      containers:
       - name: discovery-server
         image: public.ecr.aws/y6x2k4a9/spring-petclinic-discovery-server:latest
         ports:

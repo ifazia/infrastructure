@@ -101,7 +101,6 @@ resource "aws_iam_role_policy_attachment" "AWSCertificateManagerReadOnly-EKS2" {
 
 
 ## ALB IAM ROLE
-
 resource "aws_iam_policy" "kubernetes_alb_controller" {
   name        = "${var.cluster_name}-alb-controller"
   path        = "/"
@@ -124,11 +123,11 @@ resource "aws_iam_role" "kubernetes_alb_controller" {
         Action = "sts:AssumeRoleWithWebIdentity",
         Effect = "Allow",
         Principal = {
-          Federated = "arn:aws:iam::484497069811:oidc-provider/${replace(aws_eks_cluster.petclinic_eks_cluster.identity[0].oidc[0].issuer, "https://", "")}"
+          Federated = "arn:aws:iam::590184139086:oidc-provider/${replace(aws_eks_cluster.petclinic_eks_cluster.identity[0].oidc[0].issuer, "https://", "")}"
         },
         Condition = {
           StringEquals = {
-            "${replace(aws_eks_cluster.petclinic_eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:aws-load-balancer-controller",
+            "${replace(aws_eks_cluster.petclinic_eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:alb-ingress-controller",
             "${replace(aws_eks_cluster.petclinic_eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:aud" = "sts.amazonaws.com"
           }
         }
