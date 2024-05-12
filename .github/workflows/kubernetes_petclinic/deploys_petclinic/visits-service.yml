@@ -23,11 +23,19 @@ spec:
                     memory: 1Gi
                   requests:
                     cpu: 100m
-                  memory: 250Mi 
+                  memory: 250Mi
+          volumeMounts:  
+            - name: petclinic-volume
+              mountPath: /app/data/  # Chemin de montage dans le conteneur
           ports:
-            - containerPort: 8082
+            - containerPort: 8080
       imagePullSecrets:
-      - name: my-dockerhub-secret
+        - name: my-dockerhub-secret
+        volumes:  
+        - name: petclinic-volume
+          persistentVolumeClaim:
+            claimName: petclinic-pvc
+        restartPolicy: Always
 ---
 #Le service ClusterIP est le type par défaut au sein de Kubernetes
 #Il reçoit une adresse IP interne au cluster, ce qui rend ses Pods uniquement accessibles depuis le cluster
@@ -38,13 +46,13 @@ metadata:
   labels:
     app: visits-service
   name: visits-service
-  namespace: spring-petclinic 
+  namespace: spring-petclinic
 spec:
   type: ClusterIP
   ports:
   - name: "http"
-    port: 8082
-    targetPort: 8082
+    port: 8080
+    targetPort: 8080
     protocol: TCP
   selector:
     app: visits-service

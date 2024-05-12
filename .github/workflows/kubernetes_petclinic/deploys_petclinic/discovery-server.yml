@@ -17,17 +17,25 @@ spec:
       - name: discovery-container
         image: public.ecr.aws/y6x2k4a9/spring-petclinic-discovery-server:latest
         imagePullPolicy: Always
-        resources:
+          resources:
                   limits:
                     cpu: 1
                     memory: 1Gi
                   requests:
                     cpu: 100m
                   memory: 250Mi
-        ports:
-        - containerPort: 8761
+          volumeMounts:  
+            - name: petclinic-volume
+              mountPath: /app/data/  # Chemin de montage dans le conteneur
+          ports:
+            - containerPort: 8761
       imagePullSecrets:
-      - name: my-dockerhub-secret
+        - name: my-dockerhub-secret
+        volumes:  
+        - name: petclinic-volume
+          persistentVolumeClaim:
+            claimName: petclinic-pvc
+        restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
