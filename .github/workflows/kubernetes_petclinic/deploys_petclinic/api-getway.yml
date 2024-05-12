@@ -23,7 +23,9 @@ spec:
                     memory: 1Gi
                   requests:
                     cpu: 100m
-                  memory: 250Mi 
+                  memory: 250Mi
+          ports:
+             - containerPort: 8080
       imagePullSecrets:
         - name: my-dockerhub-secret
 ---
