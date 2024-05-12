@@ -13,7 +13,7 @@ spec:
         app: prometheus-server
     spec:
       containers:
-        - name: prometheus-server
+        - name: prometheus-container
           image: prom/prometheus:latest
           ports:
             - containerPort: 9090
