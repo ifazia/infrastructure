@@ -25,7 +25,7 @@ spec:
                     cpu: 100m
                   memory: 250Mi 
           ports:
-            - containerPort: 8080
+            - containerPort: 8082
       imagePullSecrets:
       - name: my-dockerhub-secret
 ---
@@ -43,8 +43,8 @@ spec:
   type: ClusterIP
   ports:
   - name: "http"
-    port: 8080
-    targetPort: 8080
+    port: 8082
+    targetPort: 8082
     protocol: TCP
   selector:
     app: visits-service
