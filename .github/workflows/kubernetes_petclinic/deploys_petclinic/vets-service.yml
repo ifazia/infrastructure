@@ -19,8 +19,16 @@ spec:
       containers:
         - name: vets-container
           image: public.ecr.aws/y6x2k4a9/spring-petclinic-vets-service:latest
+          imagePullPolicy: Always
+          resources:
+                  limits:
+                    cpu: 1
+                    memory: 1Gi
+                  requests:
+                    cpu: 100m
+                  memory: 250Mi
           ports:
-            - containerPort: 8080
+            - containerPort: 8083
       imagePullSecrets:
       - name: my-dockerhub-secret
       
@@ -41,7 +49,7 @@ spec:
   ports:
   - name: "http"
     protocol: TCP
-    port: 8080
-    targetPort: 8080
+    port: 8083
+    targetPort: 8083
   selector:
     app: vets-service
