@@ -13,7 +13,7 @@ spec:
         app: tracing-server
     spec:
       containers:
-        - name: tracing-server
+        - name: tracing-container
           image: openzipkin/zipkin:latest
           ports:
             - containerPort: 9411

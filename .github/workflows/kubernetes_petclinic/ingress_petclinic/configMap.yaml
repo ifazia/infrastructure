@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: petclinic-config
+data:
+  application.properties: |
+    globalkey=global-key-value
+  application-qa.properties: |
+    globalkey=global-key-qa-value
+  application-prod.properties: |
+    globalkey=global-key-prod-value

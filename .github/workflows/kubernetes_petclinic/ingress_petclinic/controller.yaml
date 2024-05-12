@@ -3,9 +3,10 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: kubernetes_alb_controller
-    name: alb-ingress-controller
-    namespace: spring-petclinic 
+  name: alb-controller
+  namespace: spring-petclinic 
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: kubernetes_alb_controller
@@ -14,13 +15,13 @@ spec:
       labels:
         app.kubernetes.io/name: kubernetes_alb_controller
     spec:
-      serviceAccountName: alb-ingress-controller 
+      serviceAccountName: alb-serviceaccount
       containers:
-        - name: alb-ingress-controller
+        - name: alb-container
           image: docker.io/amazon/aws-alb-ingress-controller:v1.1.9
           args:
-            - --ingress-class=alb
-            - --cluster-name=petclinic-eks-cluster
-            - --aws-vpc-id=vpc-0e9108542b1a2c087
-            - --aws-region=eu-west-3
+            - --ingress-class="alb"
+            - --cluster-name="petclinic-eks-cluster"
+            - --aws-vpc-id="vpc-0f5393e2ca3453bec"
+            - --aws-region="eu-west-3"
           env: []

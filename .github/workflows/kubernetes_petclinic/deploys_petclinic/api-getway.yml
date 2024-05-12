@@ -14,7 +14,7 @@ spec:
         app: api-gateway
     spec:
       containers:
-        - name: api-gateway
+        - name: api-gateway-container
           image: public.ecr.aws/y6x2k4a9/spring-petclinic-api-gateway:latest
       imagePullSecrets:
         - name: petclinic-tls-secret
@@ -22,7 +22,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-gateway
+  name: api-gateway-service
   namespace: spring-petclinic 
   labels:
     app: api-gateway
