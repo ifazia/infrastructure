@@ -22,11 +22,11 @@ spec:
                     cpu: 1
                     memory: 1Gi
                   requests:
-                    cpu: 100m
-                    memory: 250Mi
+                    cpu: 500m
+                    memory: 512Mi
           volumeMounts:  
             - name: petclinic-volume
-              mountPath: /data  # Chemin de montage dans le conteneur
+              mountPath: /app/data  # Chemin de montage dans le conteneur
           ports:
             - containerPort: 8888
       imagePullSecrets:
