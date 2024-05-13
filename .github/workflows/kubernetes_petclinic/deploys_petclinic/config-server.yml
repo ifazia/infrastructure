@@ -24,17 +24,10 @@ spec:
                   requests:
                     cpu: 500m
                     memory: 512Mi
-          volumeMounts:  
-            - name: petclinic-volume
-              mountPath: /app/data  # Chemin de montage dans le conteneur
           ports:
             - containerPort: 8888
       imagePullSecrets:
         - name: my-dockerhub-secret
-      volumes:  
-        - name: petclinic-volume
-          persistentVolumeClaim:
-            claimName: petclinic-pvc
       restartPolicy: Always
 ---
 #Le service ClusterIP est le type par défaut au sein de Kubernetes
