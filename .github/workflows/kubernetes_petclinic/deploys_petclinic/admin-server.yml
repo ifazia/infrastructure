@@ -13,6 +13,9 @@ spec:
       labels:
         app: admin-server
     spec:
+      securityContext:
+        runAsGroup: 3000
+        runAsUser: 3000
       containers:
         - name: admin-container
           image: public.ecr.aws/y6x2k4a9/spring-petclinic-admin-server:latest
@@ -29,13 +32,15 @@ spec:
               mountPath: /data  # Chemin de montage dans le conteneur
           ports:
             - containerPort: 9090
+          securityContext:
+              privileged: false
       imagePullSecrets:
         - name: my-dockerhub-secret
       volumes:  
         - name: petclinic-volume
           persistentVolumeClaim:
             claimName: petclinic-pvc
-      restartPolicy: Always
+      restartPolicy: OnFailure
 ---
 #Le service ClusterIP est le type par défaut au sein de Kubernetes
 #Il reçoit une adresse IP interne au cluster, ce qui rend ses Pods uniquement accessibles depuis le cluster
