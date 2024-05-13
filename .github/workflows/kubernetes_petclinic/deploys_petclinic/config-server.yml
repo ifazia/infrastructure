@@ -26,7 +26,7 @@ spec:
                     memory: 250Mi
           volumeMounts:  
             - name: petclinic-volume
-              mountPath: /app/data/  # Chemin de montage dans le conteneur
+              mountPath: /app/data  # Chemin de montage dans le conteneur
           ports:
             - containerPort: 8888
       imagePullSecrets:
