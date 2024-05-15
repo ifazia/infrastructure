@@ -67,4 +67,6 @@ resource "aws_db_instance" "visit-db" {
  vpc_security_group_ids = [aws_security_group.petclinic_sg_mysql.id]
  db_subnet_group_name = aws_db_subnet_group.petclinic_db_subnet.name
  backup_retention_period = 1
+
 }
+
