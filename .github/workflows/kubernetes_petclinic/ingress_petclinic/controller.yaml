@@ -22,7 +22,7 @@ spec:
           args:
             - --ingress-class="alb"
             - --cluster-name="petclinic-eks-cluster"
-            - --aws-vpc-id="vpc-01eb93b16d4b06aa8"
+            - --aws-vpc-id="vpc-0fe724b974658fa27"
             - --aws-region="eu-west-3"
           resources:
             limits:
