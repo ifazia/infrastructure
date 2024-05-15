@@ -35,11 +35,9 @@ spec:
             name: petclinic-config
       imagePullSecrets:
         - name: my-dockerhub-secret
-    restartPolicy: Always
+      restartPolicy: Always
+
 ---
-#Le service ClusterIP est le type par défaut au sein de Kubernetes
-#Il reçoit une adresse IP interne au cluster, ce qui rend ses Pods uniquement accessibles depuis le cluster
-#Ce service doit juste est accessible par l'API
 apiVersion: v1
 kind: Service
 metadata:
@@ -47,12 +45,12 @@ metadata:
     app: admin-server
   name: admin-service
   namespace: spring-petclinic
-  spec:
-    type: ClusterIP
-    ports:
-      - name: "http"
-        port: 9090
-        targetPort: 9090
-        protocol: TCP
-    selector:
-      app: admin-server
+spec:
+  type: ClusterIP
+  ports:
+    - name: "http"
+      port: 9090
+      targetPort: 9090
+      protocol: TCP
+  selector:
+    app: admin-server
