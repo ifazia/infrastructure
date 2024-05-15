@@ -27,6 +27,7 @@ variable "cidr_public_subnet_b" {
   default     = "10.0.1.0/24"
 }
 
+
 variable "petclinic_user" {
  description = "Mysql user"
  default    = "datascientest"
@@ -56,5 +57,11 @@ variable "secret_key" {
   type    = string
   default = "$AWS_SECRET_ACCESS_KEY"
 }
-
+variable "subnets_private" {
+  description = "Map of private subnets"
+  default = {
+    subnet_a = ""
+    subnet_b = ""
+  }
+}
 
