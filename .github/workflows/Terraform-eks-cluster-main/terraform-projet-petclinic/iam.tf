@@ -56,6 +56,28 @@ resource "aws_eks_node_group" "worker-node-group" {
     aws_iam_role_policy_attachment.AWSCertificateManagerReadOnly-EKS
   ]
 }
+# Create aws node group on-demand
+resource "aws_eks_node_group" "worker-node-group-ondemand" {
+  cluster_name    = aws_eks_cluster.petclinic_eks_cluster.name
+  node_group_name = "${var.cluster_name}-worker-node-group-ondemand"
+  node_role_arn   = aws_iam_role.workernodes.arn
+  subnet_ids      = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
+  instance_types  = ["t3.large"]
+  capacity_type   = "ON_DEMAND"  # Définit le type de capacité comme étant "ondemand"
+
+  scaling_config {
+    desired_size = 1
+    max_size     = 1
+    min_size     = 1
+  }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.AWSCertificateManagerReadOnly-EKS
+  ]
+}
 # Create iam role and policies for our workrer nodes
 resource "aws_iam_role" "workernodes" {
   name = "${var.cluster_name}-worker-nodes"
@@ -101,6 +123,7 @@ resource "aws_iam_role_policy_attachment" "AWSCertificateManagerReadOnly-EKS2" {
 
 
 ## ALB IAM ROLE
+
 resource "aws_iam_policy" "kubernetes_alb_controller" {
   name        = "${var.cluster_name}-alb-controller"
   path        = "/"
@@ -127,7 +150,7 @@ resource "aws_iam_role" "kubernetes_alb_controller" {
         },
         Condition = {
           StringEquals = {
-            "${replace(aws_eks_cluster.petclinic_eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:alb-ingress-controller",
+            "${replace(aws_eks_cluster.petclinic_eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:aws-load-balancer-controller",
             "${replace(aws_eks_cluster.petclinic_eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:aud" = "sts.amazonaws.com"
           }
         }
@@ -140,4 +163,3 @@ resource "aws_iam_role_policy_attachment" "kubernetes_alb_controller" {
   role       = aws_iam_role.kubernetes_alb_controller.name
   policy_arn = aws_iam_policy.kubernetes_alb_controller.arn
 }
-
