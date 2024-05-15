@@ -35,7 +35,7 @@ spec:
             name: petclinic-config
       imagePullSecrets:
         - name: my-dockerhub-secret
-      restartPolicy: Always
+    restartPolicy: Always
 ---
 #Le service ClusterIP est le type par défaut au sein de Kubernetes
 #Il reçoit une adresse IP interne au cluster, ce qui rend ses Pods uniquement accessibles depuis le cluster
