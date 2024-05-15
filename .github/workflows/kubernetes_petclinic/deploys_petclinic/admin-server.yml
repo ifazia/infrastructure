@@ -24,8 +24,8 @@ spec:
             requests:
               cpu: 100m
               memory: 250Mi
-            ports:
-              - containerPort: 9090
+          ports:
+            - containerPort: 9090
           volumeMounts:
             - name: petclinic-config-volume
               mountPath: /app/config
