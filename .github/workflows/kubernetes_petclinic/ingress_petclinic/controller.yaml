@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kubernetes_alb_controller
   name: alb-controller
-  namespace: spring-petclinic 
+  namespace: spring-petclinic
 spec:
   replicas: 2
   selector:
@@ -18,10 +18,16 @@ spec:
       serviceAccountName: alb-serviceaccount
       containers:
         - name: alb-container
-          image: docker.io/amazon/aws-alb-ingress-controller:v1.1.9
+          image: public.ecr.aws/eks/aws-load-balancer-controller:v2.7.2
           args:
             - --ingress-class="alb"
             - --cluster-name="petclinic-eks-cluster"
-            - --aws-vpc-id="vpc-0f5393e2ca3453bec"
+            - --aws-vpc-id="vpc-01eb93b16d4b06aa8"
             - --aws-region="eu-west-3"
-          env: []
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 512Mi

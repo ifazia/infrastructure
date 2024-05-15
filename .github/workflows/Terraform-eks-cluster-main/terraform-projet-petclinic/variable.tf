@@ -57,4 +57,20 @@ variable "secret_key" {
   default = "$AWS_SECRET_ACCESS_KEY"
 }
 
+# cidr variable for the four subnets
+variable "cidr_private_subnet_a" {
+  description = "CIDR for public subnet a"
+  default     = "10.0.16.0/24"
+}
 
+variable "cidr_private_subnet_b" {
+  description = "CIDR for public subnet b"
+  default     = "10.0.144.0/24"
+}
+variable "subnets_private" {
+  description = "Map of private subnets"
+  default = {
+    subnet_a = ""
+    subnet_b = ""
+  }
+}

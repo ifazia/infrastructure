@@ -1,6 +1,6 @@
 resource "aws_db_subnet_group" "petclinic_db_subnet" {
  name    = "petclinic_db_subnet"
- subnet_ids = [aws_subnet.public_subnet_a.id,aws_subnet.public_subnet_b.id] # Spécifiez les sous-réseaux souhaités
+ subnet_ids = [aws_subnet.private_subnet_a.id,aws_subnet.private_subnet_b.id] # Spécifiez les sous-réseaux souhaités
 }
 
 #Security group pour mysql
@@ -68,19 +68,3 @@ resource "aws_db_instance" "visit-db" {
  db_subnet_group_name = aws_db_subnet_group.petclinic_db_subnet.name
  backup_retention_period = 1
 }
-
-#
-
-
-
-
-
-
-
-
-
-
-
-
-
-
