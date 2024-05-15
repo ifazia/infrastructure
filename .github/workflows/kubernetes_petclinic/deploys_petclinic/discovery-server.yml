@@ -22,20 +22,13 @@ spec:
                   cpu: 1
                   memory: 1Gi
                 requests:
-                  cpu: 100m
-                  memory: 250Mi
-        volumeMounts:  
-          - name: petclinic-volume
-            mountPath: /data  # Chemin de montage dans le conteneur
+                  cpu: 500m
+                  memory: 512Mi
         ports:
-          - containerPort: 8761
+            - containerPort: 8761
       imagePullSecrets:
         - name: my-dockerhub-secret
-      volumes:  
-        - name: petclinic-volume
-          persistentVolumeClaim:
-            claimName: petclinic-pvc
-      restartPolicy: Always
+    restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
