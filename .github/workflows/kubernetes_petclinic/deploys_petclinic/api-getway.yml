@@ -13,6 +13,7 @@ spec:
       labels:
         app: api-gateway
     spec:
+      serviceAccountName: alb-serviceaccount
       containers:
         - name: api-gateway-container
           image: public.ecr.aws/y6x2k4a9/spring-petclinic-api-gateway:latest
@@ -34,11 +35,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: api-gateway-service
-  namespace: spring-petclinic 
-  labels:
-    app: api-gateway
-spec:
-  ports:
-  - port: 8080
-  selector:
-    app: api-gateway
+  namespace: spring-petclinic
+  spec:
+    ports:
+    - name: "http"
+      port: 80
+      targetPort: 8080
+    selector:
+      app: api-gateway
+    type: LoadBalancer
+  status:
+    loadBalancer: {}
