@@ -28,7 +28,7 @@ spec:
             - containerPort: 8761
       imagePullSecrets:
         - name: my-dockerhub-secret
-    restartPolicy: Always
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
