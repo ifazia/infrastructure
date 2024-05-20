@@ -37,9 +37,9 @@ metadata:
   namespace: spring-petclinic
   spec:
     ports:
-    - name: "http"
-      port: 80
-      targetPort: 8080
+      - name: "http"
+        port: 80
+        targetPort: 8080
     selector:
       app: api-gateway
     type: LoadBalancer
