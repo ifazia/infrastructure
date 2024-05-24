@@ -53,6 +53,8 @@ spec:
     targetPort: 8080
   selector:
     app: vets-service
+status:
+  loadBalancer: {}
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
