@@ -27,7 +27,6 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /config
-              subPath: application.yaml
           ports:
             - containerPort: 8080
           env:  # Déplacement de la section env ici
@@ -37,11 +36,10 @@ spec:
         - name: config-volume
           configMap:
             name: petclinic-config
-            items:
-              - key: application.yaml
-                path: application.yaml
+            
       imagePullSecrets:
         - name: my-dockerhub-secret
+status: {}
 ---
 apiVersion: v1
 kind: Service
