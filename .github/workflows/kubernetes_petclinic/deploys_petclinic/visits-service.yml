@@ -48,6 +48,8 @@ spec:
     protocol: TCP
   selector:
     app: visits-service
+status:
+  loadBalancer: {}
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
