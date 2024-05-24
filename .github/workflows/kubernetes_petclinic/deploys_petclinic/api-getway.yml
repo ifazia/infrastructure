@@ -24,11 +24,22 @@ spec:
             requests:
               cpu: 200m
               memory: 1Gi
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+              subPath: application.yaml
           ports:
             - containerPort: 8080
           env:  # Déplacement de la section env ici
             - name: SPRING_PROFILES_ACTIVE
               value: kubernetes
+      volumes:
+        - name: config-volume
+          configMap:
+            name: petclinic-config
+            items:
+              - key: application.yaml
+                path: application.yaml
       imagePullSecrets:
         - name: my-dockerhub-secret
 ---
