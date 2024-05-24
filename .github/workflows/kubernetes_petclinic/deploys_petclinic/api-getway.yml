@@ -45,6 +45,8 @@ spec:
   selector:
     app: api-gateway
   type: LoadBalancer
+status:
+  loadBalancer: {}
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
