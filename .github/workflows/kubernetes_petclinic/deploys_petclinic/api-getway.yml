@@ -24,6 +24,9 @@ spec:
                   requests:
                     cpu: 100m
                     memory: 250Mi
+          env: #variables d'environeement
+        - name: SPRING_PROFILES_ACTIVE
+          value: kubernetes
           ports:
             - containerPort: 8080
       imagePullSecrets:
