@@ -1,47 +1,3 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: api-gateway
-  namespace: spring-petclinic
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: api-gateway
-  template:
-    metadata:
-      labels:
-        app: api-gateway
-    spec:
-      serviceAccountName: alb-serviceaccount
-      containers:
-        - name: api-gateway-container
-          image: public.ecr.aws/y6x2k4a9/spring-petclinic-api-gateway:latest
-          imagePullPolicy: Always
-          resources:
-            limits:
-              cpu: 2
-              memory: 1Gi
-            requests:
-              cpu: 2000m
-              memory: 1Gi
-          volumeMounts:
-            - name: config-volume
-              mountPath: /config
-          ports:
-            - containerPort: 8080
-          env:  # Déplacement de la section env ici
-            - name: SPRING_PROFILES_ACTIVE
-              value: kubernetes
-      volumes:
-        - name: config-volume
-          configMap:
-            name: petclinic-config
-            
-      imagePullSecrets:
-        - name: my-dockerhub-secret
-status: {}
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -55,25 +11,3 @@ spec:
   selector:
     app: api-gateway
   type: LoadBalancer
-status:
-  loadBalancer: {}
----
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: api-gateway-hpa
-  namespace: spring-petclinic
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: api-gateway
-  minReplicas: 1
-  maxReplicas: 2
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 50
