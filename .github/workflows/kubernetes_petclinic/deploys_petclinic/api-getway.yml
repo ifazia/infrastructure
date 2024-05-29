@@ -11,3 +11,17 @@ spec:
   selector:
     app: api-gateway
   type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway-service
+  namespace: spring-petclinic
+spec:
+  ports:
+  - name: "http"
+    port: 80
+    targetPort: 8080
+  selector:
+    app: api-gateway
+  type: LoadBalancer
