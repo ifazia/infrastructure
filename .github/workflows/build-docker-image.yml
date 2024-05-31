@@ -16,9 +16,11 @@ jobs:
       with:
         node-version: '14'  
     
+    - name: Download Dockerfile
+      run: curl -o Dockerfile https://raw.githubusercontent.com/ifazia/spring-petclinic-admin-server/admin/Dockerfile
+      
     - name: Build Docker Image
-      run: docker build -t ${{ secrets.ECR_REPOSITORY_NAME }}:latest -f https://raw.githubusercontent.com/ifazia/spring-petclinic-admin-server/admin/Dockerfile
-
+      run: docker build -t ${{ secrets.ECR_REPOSITORY_NAME }}:latest -f Dockerfile .
     - name: Authenticate to Amazon ECR Public
       uses: aws-actions/configure-aws-credentials@v2
       with:
