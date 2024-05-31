@@ -24,13 +24,8 @@ spec:
             requests:
               cpu: 100m
               memory: 250Mi
-          volumeMounts:
-            - name: petclinic-config-volume
-              mountPath: /app/config
-      volumes:
-        - name: petclinic-config-volume
-          configMap:
-            name: petclinic-config
+          ports:
+            - containerPort: 9090
       imagePullSecrets:
         - name: my-dockerhub-secret
       restartPolicy: Always
