@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - infra
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
@@ -16,65 +14,32 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '14'
-
-    # Authentification à AWS
-    - name: Authenticate to AWS
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION_B }}
+        node-version: '14'  
     
-    # Récupération des tags de l'image existante
-    - name: Get Tags
-      id: get-tags
-      run: |
-        TAGS=$(aws ecr-public describe-images --repository-name ${{ secrets.ECR_REPOSITORY_NAME }} --region ${{ secrets.AWS_REGION_B }} --query 'imageDetails[*].imageTags' --output json)
-        echo "TAGS=$TAGS"
-        echo "::set-output name=tags::$TAGS"
-
-    # Analyse du dernier numéro de version
-    - name: Parse Latest Version
-      id: parse-version
-      run: |
-        TAGS="${{ steps.get-tags.outputs.tags }}"
-        echo "TAGS=$TAGS"
-        LAST_VERSION=$(echo "$TAGS" | jq -r '. | map(select(. != null)) | .[-1]')
-        echo "LAST_VERSION=$LAST_VERSION"
-        if [ -n "$LAST_VERSION" ]; then
-          NEW_VERSION=$(echo $LAST_VERSION | awk -F '.' '{print $1 "." $2 "." $3 + 1}')
-        else
-          NEW_VERSION="0.0.1"
-        fi
-        echo "NEW_VERSION=$NEW_VERSION"
-        echo "::set-output name=version::$NEW_VERSION"
-
-    # Build de l'image Docker
     - name: Build Docker Image
       run: docker build -t ${{ secrets.ECR_REPOSITORY_NAME }}:latest .
 
-    # Authentification à ECR Public
     - name: Authenticate to Amazon ECR Public
       uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION_B }}
+        
+    - name: Get ECR Public Login Password
+      id: ecr-login
+      run: echo "::set-output name=password::$(aws ecr-public get-login-password --region ${{ secrets.AWS_REGION_B }})"
 
-    # Connexion à ECR Public
     - name: Docker Login
-      run: |
-        aws ecr-public get-login-password --region ${{ secrets.AWS_REGION_B }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+      uses: aws-actions/amazon-ecr-login@v1
+      with:
+        registry: ${{ secrets.ECR_REGISTRY }}
+        aws-region: ${{ secrets.AWS_REGION_B }}
+        registry-type: public
+        run: echo "${{ steps.ecr-login.outputs.password }}" | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
-    # Tag de l'image Docker avec la nouvelle version
     - name: Tag Docker Image
-      run: |
-        NEW_VERSION="${{ steps.parse-version.outputs.version }}"
-        docker tag ${{ secrets.ECR_REPOSITORY_NAME }}:latest ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$NEW_VERSION
+      run: docker tag ${{ secrets.ECR_REPOSITORY_NAME }}:latest ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
 
-    # Push de l'image Docker vers ECR Public avec la nouvelle version
     - name: Push Docker Image to Amazon ECR Public
-      run: |
-        NEW_VERSION="${{ steps.parse-version.outputs.version }}"
-        docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$NEW_VERSION
+      run: docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
