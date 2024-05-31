@@ -22,7 +22,7 @@ jobs:
     - name: Get Tags
       id: get-tags
       run: |
-        TAGS=$(aws ecr-public list-images --repository-name ${{ secrets.ECR_REPOSITORY_NAME }} --region ${{ secrets.AWS_REGION_B }} --query 'imageIds[*].imageTag' --output json)
+        TAGS=$(aws ecr-public describe-images --repository-name ${{ secrets.ECR_REPOSITORY_NAME }} --region ${{ secrets.AWS_REGION_B }} --query 'imageIds[*].imageTag' --output json)
         echo "TAGS=$TAGS"
         echo "::set-output name=tags::$TAGS"
 
