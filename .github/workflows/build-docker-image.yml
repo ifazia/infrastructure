@@ -17,7 +17,7 @@ jobs:
         node-version: '14'  
     
     - name: Build Docker Image
-      run: docker build -t ${{ secrets.ECR_REPOSITORY_NAME }}:latest -f spring-petclinic-admin-server/Dockerfile spring-petclinic-admin-server
+      run: docker build -t ${{ secrets.ECR_REPOSITORY_NAME }}:latest -f $GITHUB_WORKSPACE/spring-petclinic-admin-server/Dockerfile $GITHUB_WORKSPACE/spring-petclinic-admin-server
 
     - name: Authenticate to Amazon ECR Public
       uses: aws-actions/configure-aws-credentials@v2
