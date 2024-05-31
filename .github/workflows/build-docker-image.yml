@@ -23,6 +23,7 @@ jobs:
       id: get-tags
       run: |
         TAGS=$(aws ecr-public list-images --repository-name ${{ secrets.ECR_REPOSITORY_NAME }} --region ${{ secrets.AWS_REGION_B }} --query 'imageIds[*].imageTag' --output json)
+        echo "TAGS=$TAGS"
         echo "::set-output name=tags::$TAGS"
 
     # Analyse du dernier numéro de version
@@ -30,8 +31,15 @@ jobs:
       id: parse-version
       run: |
         TAGS="${{ steps.get-tags.outputs.tags }}"
+        echo "TAGS=$TAGS"
         LAST_VERSION=$(echo "$TAGS" | jq -r '. | map(select(. != null)) | .[-1]')
-        export NEW_VERSION=$(echo $LAST_VERSION | awk -F '.' '{print $1 "." $2 "." $3 + 1}')
+        echo "LAST_VERSION=$LAST_VERSION"
+        if [ -n "$LAST_VERSION" ]; then
+          NEW_VERSION=$(echo $LAST_VERSION | awk -F '.' '{print $1 "." $2 "." $3 + 1}')
+        else
+          NEW_VERSION="0.0.1"
+        fi
+        echo "NEW_VERSION=$NEW_VERSION"
         echo "::set-output name=version::$NEW_VERSION"
 
     # Build de l'image Docker
@@ -46,31 +54,19 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION_B }}
 
-    # Récupération du mot de passe pour ECR Public
-    - name: Get ECR Public Login Password
-      id: ecr-login
-      run: echo "::set-output name=password::$(aws ecr-public get-login-password --region ${{ secrets.AWS_REGION_B }})"
-
     # Connexion à ECR Public
     - name: Docker Login
-      uses: aws-actions/amazon-ecr-login@v1
-      with:
-        registry: ${{ secrets.ECR_REGISTRY }}
-        aws-region: ${{ secrets.AWS_REGION_B }}
-        registry-type: public
-        run: echo "${{ steps.ecr-login.outputs.password }}" | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+      run: |
+        aws ecr-public get-login-password --region ${{ secrets.AWS_REGION_B }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
     # Tag de l'image Docker avec la nouvelle version
     - name: Tag Docker Image
       run: |
-        # Initialiser NEW_VERSION à latest
-        export NEW_VERSION="latest"
-        # Si une version est trouvée, incrémenter NEW_VERSION
-        if [ -n "$LAST_VERSION" ]; then
-          NEW_VERSION=$(echo $LAST_VERSION | awk -F '.' '{print $1 "." $2 "." $3 + 1}')
-        fi
+        NEW_VERSION="${{ steps.parse-version.outputs.version }}"
         docker tag ${{ secrets.ECR_REPOSITORY_NAME }}:latest ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$NEW_VERSION
 
     # Push de l'image Docker vers ECR Public avec la nouvelle version
     - name: Push Docker Image to Amazon ECR Public
-      run: docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$NEW_VERSION
+      run: |
+        NEW_VERSION="${{ steps.parse-version.outputs.version }}"
+        docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_NAME }}:$NEW_VERSION
