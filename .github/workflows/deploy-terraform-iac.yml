@@ -1,9 +1,9 @@
 name: Apply Terraform
-run-name: Starting to apply terraform
 on:
   push:
     branches:
       - "main"
+
 jobs:
   update-infrastructure:
     runs-on: ubuntu-22.04
@@ -21,23 +21,20 @@ jobs:
         with:
           fetch-depth: 0
 
-        # check https://github.com/marketplace/actions/hashicorp-setup-terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.7.5"
           terraform_wrapper: false
-      
+
       - name: Clean Terraform cache
         run: rm -rf .terraform
-      #- name: Terraform fmt
-        #id: fmt
-        #run: terraform fmt -check
-        #continue-on-error: true
-      
+
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          echo "Running terraform init"
+          terraform init
 
       - name: Debug Terraform Init
         run: |
@@ -47,16 +44,18 @@ jobs:
           ls -alh
           echo "Contents of .terraform directory (if exists):"
           ls -alh .terraform || echo ".terraform directory does not exist"
-      
+          echo "Contents of .terraform/plugins (if exists):"
+          ls -alh .terraform/plugins || echo ".terraform/plugins directory does not exist"
+
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
       
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color  -detailed-exitcode
+        run: terraform plan -no-color -detailed-exitcode
         continue-on-error: true
         
-      - name: Terraform apply
+      - name: Terraform Apply
         id: apply
         run: terraform apply -auto-approve
