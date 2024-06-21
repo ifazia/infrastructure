@@ -33,6 +33,9 @@ jobs:
         run: terraform fmt -check
         continue-on-error: true
       
+      - name: Clean Terraform cache
+        run: rm -rf .terraform
+      
       - name: Terraform Init
         id: init
         run: terraform init
