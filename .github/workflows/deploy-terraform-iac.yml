@@ -33,18 +33,18 @@ jobs:
         run: terraform fmt -check
         continue-on-error: true
       
-      - name: Clean Terraform cache
-        run: rm -rf .terraform
-
-      - name: List .terraform directory
-        run: ls -alh .terraform
-
-      - name: List .terraform/plugins directory
-        run: ls -alh .terraform/plugins
-      
       - name: Terraform Init
         id: init
         run: terraform init
+
+      - name: Debug Terraform Init
+        run: |
+          echo "Terraform init output:"
+          terraform init
+          echo "Directory listing:"
+          ls -alh
+          echo "Contents of .terraform directory (if exists):"
+          ls -alh .terraform || echo ".terraform directory does not exist"
       
       - name: Terraform Validate
         id: validate
