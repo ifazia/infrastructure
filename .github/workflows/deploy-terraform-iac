@@ -1,6 +1,6 @@
-name: Apply Terraform 
+name: Apply Terraform
 run-name: Starting to apply terraform
-on: 
+on:
   push:
     branches:
       - "main"
