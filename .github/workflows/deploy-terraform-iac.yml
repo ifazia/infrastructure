@@ -35,6 +35,12 @@ jobs:
       
       - name: Clean Terraform cache
         run: rm -rf .terraform
+
+      - name: List .terraform directory
+        run: ls -alh .terraform
+
+      - name: List .terraform/plugins directory
+        run: ls -alh .terraform/plugins
       
       - name: Terraform Init
         id: init
