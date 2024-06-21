@@ -29,12 +29,12 @@ variable "cidr_public_subnet_b" {
 
 variable "DB_USERNAME" {
  description = "Database username"
- Type    = string
+ type    = string
  sensitive = true
 }
 variable "DB_PASSWORD" {
  description = "Database password"
- Type    = string
+ type    = string
  sensitive = true
 }
 
@@ -78,6 +78,6 @@ variable "subnets_private" {
 }
 variable "GRAFANA_PASSWORD" {
  description = "Grafana password"
- Type    = string
+ type    = string
  sensitive = true
 }
