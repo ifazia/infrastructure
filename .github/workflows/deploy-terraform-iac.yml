@@ -3,11 +3,11 @@ name: Apply Terraform
 on:
   push:
     branches:
-      - main
+      - "main"
 
 jobs:
   update-infrastructure:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -17,8 +17,8 @@ jobs:
       TF_VAR_GRAFANA_PASSWORD: ${{ secrets.GRAFANA_PASSWORD }}
 
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
+      - name: Checkout repository code
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
@@ -31,15 +31,8 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-          echo "Running terraform init"
-          cd terraform-projet-petclinic  # Se déplacer dans le répertoire de travail Terraform
+          cd terraform-projet-petclinic
           terraform init -upgrade
-          echo "Directory listing after init:"
-          ls -alh
-          echo "Contents of .terraform directory (if exists):"
-          ls -alh .terraform || echo ".terraform directory does not exist"
-          echo "Contents of .terraform/plugins (if exists):"
-          ls -alh .terraform/plugins || echo ".terraform/plugins directory does not exist"
 
       - name: Terraform Validate
         id: validate
@@ -47,15 +40,20 @@ jobs:
           cd terraform-projet-petclinic
           terraform validate -no-color
 
-      - name: Terraform Plan
-        id: plan
-        run: |
-          cd terraform-projet-petclinic
-          terraform plan -no-color -detailed-exitcode
-        continue-on-error: true
-
       - name: Terraform Apply
         id: apply
         run: |
           cd terraform-projet-petclinic
           terraform apply -auto-approve
+
+      - name: Get VPC ID from Terraform Output
+        id: get-vpc-id
+        run: |
+          cd terraform-projet-petclinic
+          vpc_id=$(terraform output vpc_id)
+          echo "::set-env name=VPC_ID::$vpc_id"
+
+      - name: Use VPC ID in Subsequent Operations
+        run: |
+          echo "VPC ID: $VPC_ID"
+          # Utilize $VPC_ID in further operations as needed
