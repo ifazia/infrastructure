@@ -9,7 +9,9 @@ resource "aws_vpc" "petclinic_vpc" {
     Name = "petclinic-vpc"
   }
 }
-
+output "vpc_id" {
+  value = aws_vpc.my_vpc.id
+}
 # create two public subnets resources
 resource "aws_subnet" "public_subnet_a" {
   vpc_id                  = aws_vpc.petclinic_vpc.id

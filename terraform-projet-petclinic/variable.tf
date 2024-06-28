@@ -72,8 +72,8 @@ variable "cidr_private_subnet_b" {
 variable "subnets_private" {
   description = "Map of private subnets"
   default = {
-    subnet_a = "subnet-0efe0f853001692ff"
-    subnet_b = "subnet-00d8a22d83674baaf"
+    subnet_a = ""
+    subnet_b = ""
   }
 }
 variable "GRAFANA_PASSWORD" {
