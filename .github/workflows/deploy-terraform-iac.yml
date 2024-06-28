@@ -28,12 +28,6 @@ jobs:
           terraform_version: "1.7.5"
           terraform_wrapper: false
 
-      - name: Clean Terraform cache
-        run: |
-          echo "Cleaning .terraform directory and terraform.lock.hcl"
-          rm -rf .terraform
-          rm -f terraform.lock.hcl
-
       - name: Terraform Init
         id: init
         run: |
