@@ -3,7 +3,7 @@ name: Apply Terraform
 on:
   push:
     branches:
-      - "main"
+      - main
 
 jobs:
   update-infrastructure:
@@ -31,7 +31,8 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-          echo "Running terraform init with upgrade"
+          echo "Running terraform init"
+          cd terraform-projet-petclinic  # Se déplacer dans le répertoire de travail Terraform
           terraform init -upgrade
           echo "Directory listing after init:"
           ls -alh
@@ -42,13 +43,19 @@ jobs:
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate -no-color
+        run: |
+          cd terraform-projet-petclinic
+          terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -detailed-exitcode
+        run: |
+          cd terraform-projet-petclinic
+          terraform plan -no-color -detailed-exitcode
         continue-on-error: true
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve
+        run: |
+          cd terraform-projet-petclinic
+          terraform apply -auto-approve
