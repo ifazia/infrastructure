@@ -35,7 +35,6 @@ provider "aws" {
     key_prefixes = ["kubernetes.io/"]
   }
 }
-
 provider "kubernetes" {
   config_path = "~/.kube/config"
 }
