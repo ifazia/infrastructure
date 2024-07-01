@@ -45,9 +45,9 @@ jobs:
         run: |
           cd terraform-projet-petclinic
           vpc_id=$(terraform output -raw vpc_id)
-          echo "vpc_id=$vpc_id" >> $GITHUB_ENV
+          echo "VPC_ID=${vpc_id}" >> $GITHUB_ENV
     outputs:
-      VPC_ID: ${{ steps.get-vpc-id.outputs.vpc_id }}
+      VPC_ID: ${{ steps.get-vpc-id.outputs.VPC_ID }}
 
   use-vpc:
     runs-on: ubuntu-22.04
@@ -92,7 +92,7 @@ jobs:
           terraform plan -no-color  -detailed-exitcode
         continue-on-error: true
         
-      - name: Terraform apply
+      - name: Terraform Apply
         id: apply
         run: |
           cd terraform-projet-petclinic
