@@ -35,26 +35,26 @@ jobs:
       
       - name: Terraform Init
         id: init
-        run: 
+        run: |
           cd terraform-projet-petclinic
           terraform init
       
       - name: Terraform Validate
         id: validate
-        run: 
+        run: |
           cd terraform-projet-petclinic
           terraform validate -no-color
       
       - name: Terraform Plan
         id: plan
-        run: 
+        run: |
           cd terraform-projet-petclinic
           terraform plan -no-color  -detailed-exitcode
         continue-on-error: true
         
       - name: Terraform apply
         id: apply
-        run: 
+        run: |
           cd terraform-projet-petclinic
           terraform apply -auto-approve
 
