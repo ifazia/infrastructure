@@ -38,16 +38,16 @@ jobs:
         id: apply-vpc
         run: |
           cd terraform-projet-petclinic
-          terraform apply -auto-approve -target=aws_vpc.petclinic_vpc
-          
+          terraform apply -auto-approve -target=aws_vpc.main
+
       - name: Get VPC ID from Terraform Output
         id: get-vpc-id
         run: |
           cd terraform-projet-petclinic
           vpc_id=$(terraform output -raw vpc_id)
-          echo "::set-output name=VPC_ID::${vpc_id}"
-        outputs:
-          VPC_ID: ${{ steps.get-vpc-id.outputs.VPC_ID }}
+          echo "vpc_id=$vpc_id" >> $GITHUB_ENV
+    outputs:
+      VPC_ID: ${{ steps.get-vpc-id.outputs.vpc_id }}
 
   use-vpc:
     runs-on: ubuntu-22.04
