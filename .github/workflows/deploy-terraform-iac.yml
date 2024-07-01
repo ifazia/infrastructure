@@ -38,7 +38,7 @@ jobs:
         id: apply-vpc
         run: |
           cd terraform-projet-petclinic
-          terraform apply -auto-approve -target=aws_vpc.main
+          terraform apply -auto-approve -target=aws_vpc.petclinic_vpc
 
       - name: Get VPC ID from Terraform Output
         id: get-vpc-id
