@@ -84,4 +84,5 @@ variable "GRAFANA_PASSWORD" {
 variable "vpc_id" {
   description = "ID de la VPC utilisée par le cluster EKS"
   type        = string
+  default     = ""
 }
